@@ -1,0 +1,98 @@
+{
+  "topic_title": "How Large Language Models Work",
+  "format": "long",
+  "language": "en",
+  "title": "How Large Language Models Actually Work",
+  "hook": "Ever wondered how AI actually understands and replies to you?",
+  "key_terms": ["large language model", "token", "training"],
+  "scenes": [
+    {
+      "index": 0,
+      "role": "hook",
+      "visual": "title",
+      "narration": "Have you ever typed a question into an AI chatbot and wondered how it actually understands your words, figures out what you are really asking, searches through everything it learned, and then replies in sentences that sound almost exactly like a real person typing back to you in seconds? By the end of this video you will understand exactly how that trick works, step by step.",
+      "on_screen_title": "How AI Understands You",
+      "chapter_title": "Hook"
+    },
+    {
+      "index": 1,
+      "role": "intro",
+      "visual": "bullets",
+      "narration": "In this video we are going to break down, in plain simple language, what a large language model actually is, how it learns patterns from a truly massive amount of text during a process called training, why it can sound so confident even when it is completely wrong, and what actually happens behind the scenes every single time you send it a message.",
+      "on_screen_title": "What You Will Learn",
+      "chapter_title": "What You'll Learn",
+      "bullets": ["What a large language model is", "How training teaches it patterns", "Why it sometimes makes mistakes"]
+    },
+    {
+      "index": 2,
+      "role": "content",
+      "visual": "definition",
+      "narration": "A large language model, often shortened to LLM, is simply a computer program that has been trained on an enormous amount of text collected from books, articles, and websites, so that it can predict the single most likely next word in a sentence, over and over again, thousands of times per second, until it has formed a complete and perfectly natural sounding reply for you to read.",
+      "on_screen_title": "What Is An LLM?",
+      "chapter_title": "What Is An LLM",
+      "term": "Large Language Model",
+      "definition": "A program trained on huge text data to predict the next word"
+    },
+    {
+      "index": 3,
+      "role": "content",
+      "visual": "comparison",
+      "narration": "Traditional software follows a fixed set of rules that a human programmer writes by hand, line by line, so the exact same input will always produce the exact same output every single time you run it. A language model works completely differently, because instead of following fixed rules it learns statistical patterns directly from mountains of data, which means its answers can vary slightly and are genuinely harder to fully explain, even for the people who built it.",
+      "on_screen_title": "Rules vs Learning",
+      "chapter_title": "Rules vs Learning",
+      "comparison": {
+        "headers": ["Traditional Software", "Language Model"],
+        "rows": [
+          ["Follows fixed rules", "Learns patterns from data"],
+          ["Same output every time", "Output can vary each time"],
+          ["Easy to fully explain", "Harder to fully explain"]
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "role": "content",
+      "visual": "flow",
+      "narration": "Here is the basic flow that a language model follows almost every single time you ask it something. First, it carefully reads your entire input from start to finish. Then it breaks that input down into small pieces called tokens, which can be whole words or sometimes just a few letters. Next, using everything it has learned, it predicts the single most likely next token to come after that. Finally, it repeats that same prediction step again and again, one token at a time, until the full reply is complete.",
+      "on_screen_title": "How It Works",
+      "chapter_title": "How It Works",
+      "flow_steps": ["Read the input", "Break into tokens", "Predict next token", "Repeat until done"]
+    },
+    {
+      "index": 5,
+      "role": "content",
+      "visual": "code",
+      "narration": "Under the hood, generating a reply looks a little bit like this simple loop running quietly on a computer. The program keeps predicting the next token based on everything that came before it, adds that freshly predicted token onto the growing context, and keeps looping through this exact same process again and again until the model itself predicts a special end token, which is the model's own signal that it is finished and ready to stop.",
+      "on_screen_title": "Under The Hood",
+      "chapter_title": "Under The Hood",
+      "code": "for step in range(max_tokens):\n    next_word = model.predict(context)\n    context.append(next_word)\n    if next_word == END_TOKEN:\n        break",
+      "code_language": "python"
+    },
+    {
+      "index": 6,
+      "role": "content",
+      "visual": "broll",
+      "narration": "All of this rapid predicting happens on powerful, specialized computer chips packed tightly into huge data centers, running continuously around the clock, day and night, so that your finished answer can come back to your screen in just a second or two, even though an enormous amount of calculation is quietly happening behind that short wait.",
+      "on_screen_title": "Where It Runs",
+      "chapter_title": "Where It Runs",
+      "broll_query": "server room"
+    },
+    {
+      "index": 7,
+      "role": "recap",
+      "visual": "bullets",
+      "narration": "Let's quickly recap everything we covered in this video today. A language model predicts one single token at a time, based purely on statistical patterns it picked up during training, and not by directly looking up verified hard facts in some database somewhere. That is exactly why it can sometimes sound completely confident while still being wrong, which is precisely why you should always double check anything that actually matters before you trust it completely.",
+      "on_screen_title": "Quick Recap",
+      "chapter_title": "Recap",
+      "bullets": ["Models predict one token at a time", "Training teaches patterns, not facts", "Mistakes happen, so double check"]
+    },
+    {
+      "index": 8,
+      "role": "cta",
+      "visual": "title",
+      "narration": "If this video finally helped that idea click for you, please subscribe for more videos just like this one, where we break down big, sometimes intimidating AI ideas into simple, everyday language that anyone can understand, and I will see you very soon in the next video.",
+      "on_screen_title": "Subscribe For More AI",
+      "chapter_title": "Subscribe"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "topic_title": "How AI Understands You",
+  "format": "short",
+  "language": "en",
+  "title": "How AI Understands You",
+  "hook": "Ever wondered how ChatGPT always knows what word comes next?",
+  "key_terms": ["token", "language model"],
+  "scenes": [
+    {
+      "index": 0,
+      "role": "hook",
+      "visual": "title",
+      "narration": "Ever wonder how ChatGPT always seems to know exactly what word comes next when you are chatting with it?",
+      "on_screen_title": "How AI Understands You"
+    },
+    {
+      "index": 1,
+      "role": "content",
+      "visual": "bullets",
+      "narration": "Large language models work in three simple steps. They break your sentence into small pieces called tokens, then predict the next token again and again.",
+      "on_screen_title": "Three Simple Steps",
+      "bullets": ["Break text into tokens", "Predict the next likely token", "Repeat until the reply is done"]
+    },
+    {
+      "index": 2,
+      "role": "content",
+      "visual": "definition",
+      "narration": "Think of a token like a puzzle piece. A token is just a chunk of text, sometimes a whole word and sometimes only a few letters.",
+      "on_screen_title": "What Is A Token?",
+      "term": "Token",
+      "definition": "A chunk of text a language model reads or writes"
+    },
+    {
+      "index": 3,
+      "role": "cta",
+      "visual": "broll",
+      "narration": "Follow this channel for more AI concepts explained simply in under a minute.",
+      "on_screen_title": "Follow For More",
+      "broll_query": "computer code"
+    }
+  ]
+}

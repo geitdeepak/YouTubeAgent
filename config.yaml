@@ -1,0 +1,111 @@
+project:
+  channel_name: AI Simplified
+  language: en
+  timezone: Asia/Kolkata
+llm:
+  provider: ollama
+  model: llama3.2:3b
+  host: http://localhost:11434
+  temperature: 0.7
+  review_temperature: 0.2
+  timeout_s: 300.0
+  num_ctx: 8192
+content:
+  niche: AI education
+  min_relevance: 7
+  style_guide: Friendly teacher tone. Explain like to a smart beginner. One analogy
+    per concept. Short sentences. No hype, no clickbait. Avoid statistics and dates
+    unless in source notes.
+  banned_title_words:
+  - shocking
+  - insane
+  - you won't believe
+  ai_disclosure_text: This video was produced with AI assistance (script drafting
+    and synthetic voice) and reviewed by the creator.
+formats:
+  short:
+    width: 1080
+    height: 1920
+    min_s: 30.0
+    max_s: 40.0
+    min_words: 75
+    max_words: 100
+  long:
+    width: 1920
+    height: 1080
+    min_s: 240.0
+    max_s: 300.0
+    min_words: 600
+    max_words: 750
+review:
+  min_score: 7
+  max_iterations: 2
+tts:
+  provider: edge
+  voices:
+    en: en-IN-PrabhatNeural
+    hi: hi-IN-MadhurNeural
+  rate: +0%
+  pitch: +0Hz
+  pronunciations:
+    LLM: L L M
+    LLMs: L L Ms
+    GPT: G P T
+    RAG: rag
+    API: A P I
+    GPU: G P U
+    NLP: N L P
+  aligner_fallback: faster-whisper
+stock:
+  provider: pexels
+  enabled: true
+  min_height: 720
+brand:
+  primary: '#1E3A8A'
+  accent: '#FACC15'
+  background: '#0B1020'
+  text: '#FFFFFF'
+  font_bold: assets/fonts/Poppins-Bold.ttf
+  font_regular: assets/fonts/Poppins-Regular.ttf
+  font_mono: assets/fonts/JetBrainsMono-Regular.ttf
+  font_hindi: assets/fonts/NotoSansDevanagari-Regular.ttf
+  logo: assets/brand/logo.png
+  intro_clip: null
+  outro_clip: null
+render:
+  fps: 30
+  crf: 20
+  preset: medium
+  scene_padding_s: 0.25
+  fade_s: 0.2
+  ken_burns: true
+  music_enabled: true
+  music_dir: assets/music
+  music_volume_db: -20.0
+  target_lufs: -14.0
+  parallel_clips: 1
+publish:
+  require_approval: true
+  privacy_status: private
+  contains_synthetic_media: true
+  upload_captions: true
+  category_id: '27'
+  default_language: en
+  schedule_publish_time: null
+quota:
+  daily_budget: 10000
+  safety_margin: 500
+  costs:
+    videos_insert: 1600
+    thumbnails_set: 50
+    captions_insert: 400
+schedule:
+  shorts_per_day: 1
+  longs_per_day: 0
+  run_time: 06:00
+paths:
+  db: data/edutube.db
+  workspace: workspace
+  logs: logs
+  secrets: secrets
+  topics_csv: data/topics.csv

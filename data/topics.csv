@@ -1,0 +1,11 @@
+title,format,level,priority,keywords,source_notes
+What is Artificial Intelligence?,both,beginner,5,"ai,basics",
+Machine Learning vs Deep Learning,both,beginner,5,"ml,dl",
+What is a Neural Network?,both,beginner,4,"neural network",
+How Transformers Work,long,intermediate,4,"transformer,attention",
+What is a Large Language Model?,both,beginner,5,"llm",
+RAG Explained,both,intermediate,4,"rag,retrieval",
+What are AI Agents?,both,beginner,5,"agents,tools",
+Overfitting vs Underfitting,short,beginner,3,"overfitting",
+What is Prompt Engineering?,both,beginner,4,"prompting",
+Embeddings in 40 Seconds,short,intermediate,3,"embeddings,vectors",
