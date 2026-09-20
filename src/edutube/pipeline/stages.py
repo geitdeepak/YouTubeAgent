@@ -103,7 +103,9 @@ class ScriptStage(Stage):
 
     def run(self, ctx: JobContext) -> None:
         ctx.paths.ensure()
-        script = write_script(ctx.llm, ctx.cfg, ctx.topic, ctx.job.format, log_dir=ctx.paths.llm_dir)
+        script = write_script(
+            ctx.llm, ctx.cfg, ctx.topic, ctx.job.format, language=ctx.job.language, log_dir=ctx.paths.llm_dir
+        )
         save_script(script, ctx.paths.script)
 
     def outputs(self, ctx: JobContext) -> list[Path]:

@@ -29,11 +29,12 @@ def write_script(
     topic: Topic,
     fmt: VideoFormat,
     *,
+    language: str | None = None,
     log_dir: Path | None = None,
 ) -> Script:
     """Generate a new script for `topic` (LLR-SCR-01, LLR-SCR-06)."""
     spec = cfg.formats[fmt.value]
-    variables = _base_variables(cfg, topic, fmt, spec)
+    variables = _base_variables(cfg, topic, fmt, spec, language or cfg.project.language)
     script = llm.generate_json(
         prompt_name=_prompt_name(fmt),
         variables=variables,
@@ -46,7 +47,7 @@ def write_script(
     return script
 
 
-def _base_variables(cfg: AppConfig, topic: Topic, fmt: VideoFormat, spec: FormatSpec) -> dict[str, str]:
+def _base_variables(cfg: AppConfig, topic: Topic, fmt: VideoFormat, spec: FormatSpec, language: str) -> dict[str, str]:
     return {
         "channel_name": cfg.project.channel_name,
         "style_guide": cfg.content.style_guide,
@@ -57,7 +58,7 @@ def _base_variables(cfg: AppConfig, topic: Topic, fmt: VideoFormat, spec: Format
         "max_s": str(spec.max_s),
         "min_words": str(spec.min_words),
         "max_words": str(spec.max_words),
-        "language": topic.title and cfg.project.language,
+        "language": language,
         "source_notes": topic.source_notes or "none",
     }
 

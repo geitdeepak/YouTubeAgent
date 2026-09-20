@@ -35,11 +35,12 @@ class StockProvider(ABC):
 class PexelsProvider(StockProvider):
     BASE = "https://api.pexels.com/videos/search"
 
-    def __init__(self, api_key: str, repo: Repository, cache_dir: Path) -> None:
+    def __init__(self, api_key: str, repo: Repository, cache_dir: Path, min_height: int = 720) -> None:
         self.api_key = api_key
         self.repo = repo
         self.cache_dir = cache_dir
         self.cache_dir.mkdir(parents=True, exist_ok=True)
+        self.min_height = min_height
         self._enriched_once: set[str] = set()
 
     def _enrich_query(self, query: str) -> str:
@@ -74,7 +75,7 @@ class PexelsProvider(StockProvider):
             duration = v.get("duration", 0)
             if duration < min_duration / 2:
                 continue
-            file = self._pick_file(v.get("video_files", []), target_height)
+            file = self._pick_file(v.get("video_files", []), target_height, self.min_height)
             if file is None:
                 continue
             try:

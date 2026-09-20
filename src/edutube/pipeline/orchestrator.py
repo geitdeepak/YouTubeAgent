@@ -41,7 +41,9 @@ def _make_stock(cfg: AppConfig, repo: Repository, secrets: Secrets) -> StockProv
     from edutube.media.stock import PexelsProvider
 
     cache_dir = cfg.resolve(cfg.paths.workspace) / "cache" / "pexels"
-    return PexelsProvider(secrets.pexels_api_key.get_secret_value(), repo, cache_dir)
+    return PexelsProvider(
+        secrets.pexels_api_key.get_secret_value(), repo, cache_dir, min_height=cfg.stock.min_height
+    )
 
 
 def new_job_id(topic: Topic, fmt: VideoFormat) -> str:
