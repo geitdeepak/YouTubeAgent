@@ -48,7 +48,7 @@ def test_long_script_requires_core_roles():
 
 
 def test_bullets_scene_requires_2_to_4_bullets():
-    with pytest.raises(ValidationError, match="2-4 bullets"):
+    with pytest.raises(ValidationError, match="must have 2-4 items"):
         Scene(
             index=0,
             role=SceneRole.CONTENT,
@@ -60,7 +60,7 @@ def test_bullets_scene_requires_2_to_4_bullets():
 
 
 def test_comparison_scene_needs_comparison_block():
-    with pytest.raises(ValidationError, match="comparison block"):
+    with pytest.raises(ValidationError, match="'comparison' field is missing"):
         Scene(index=0, role=SceneRole.CONTENT, visual=VisualType.COMPARISON, narration="x", on_screen_title="X")
 
 

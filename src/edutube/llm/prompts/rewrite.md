@@ -5,6 +5,11 @@ Keep the same format, target word count ($min_words-$max_words words) and overal
 topic. Fix every issue and follow the rewrite instructions exactly. Keep the parts
 of the script that already work well. Return the FULL corrected script, not a diff.
 
+Each scene's "visual" value still determines which other fields on that scene are
+REQUIRED (e.g. visual="definition" requires non-null "term" and "definition"; visual=
+"bullets" requires a non-empty "bullets" list; visual="broll" requires "broll_query").
+Keep those required fields filled in for every scene, even ones you don't otherwise change.
+
 Return ONLY JSON matching the schema.
 ---USER---
 Original script JSON:

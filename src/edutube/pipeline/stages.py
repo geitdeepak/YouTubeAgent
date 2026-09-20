@@ -170,7 +170,23 @@ class VoiceStage(Stage):
                 continue
 
             direction = "Shorten" if total > spec.max_s else "Lengthen"
-            script = adjust_length(ctx.llm, ctx.cfg, script, spec, direction, log_dir=ctx.paths.llm_dir)
+            # Retarget the word count to this voice's *measured* pace, not the format's
+            # static word range -- a script can already satisfy min_words/max_words while
+            # still being far too long in seconds if the voice speaks slower than the
+            # format's word-count target assumed. Without this, adjust_length has no real
+            # signal to shrink further once the word count happens to already be in range.
+            words_per_second = script.word_count / total if total > 0 else 0
+            if words_per_second > 0:
+                target_words = max(10, round(words_per_second * spec.target_s))
+                fit_spec = spec.model_copy(
+                    update={
+                        "min_words": max(10, round(target_words * 0.9)),
+                        "max_words": max(10, round(target_words * 1.1)),
+                    }
+                )
+            else:
+                fit_spec = spec
+            script = adjust_length(ctx.llm, ctx.cfg, script, fit_spec, direction, log_dir=ctx.paths.llm_dir)
             save_script(script, ctx.paths.script)
             rate = ctx.cfg.tts.rate
         else:

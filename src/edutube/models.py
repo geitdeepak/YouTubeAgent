@@ -116,40 +116,76 @@ class Scene(BaseModel):
 
     @model_validator(mode="after")
     def check_visual_fields(self) -> Scene:
-        """Per-type field validation (LLR-SCR-04)."""
+        """Per-type field validation (LLR-SCR-04).
+
+        Error messages distinguish "field is missing" from "field violates a limit" and
+        name the required field explicitly -- this text is fed straight back to the LLM
+        as retry feedback (LLR-LLM-03), so vague messages produce vague corrections.
+        """
         v = self.visual
         if v == VisualType.BULLETS:
-            if not self.bullets or not (2 <= len(self.bullets) <= 4):
-                raise ValueError("bullets scene needs 2-4 bullets")
+            if self.bullets is None or len(self.bullets) == 0:
+                raise ValueError(
+                    f"scene {self.index} has visual='bullets' but the 'bullets' field is missing/empty; "
+                    "it must be a list of 2-4 short strings"
+                )
+            if not (2 <= len(self.bullets) <= 4):
+                raise ValueError(f"scene {self.index}: 'bullets' must have 2-4 items, got {len(self.bullets)}")
             for b in self.bullets:
                 if count_words(b) > 8:
-                    raise ValueError(f"bullet too long (>8 words): {b!r}")
+                    raise ValueError(f"scene {self.index}: bullet too long (>8 words): {b!r}")
         elif v == VisualType.DEFINITION:
-            if not self.term or count_words(self.term) > 4:
-                raise ValueError("definition scene needs a term of <=4 words")
-            if not self.definition or count_words(self.definition) > 20:
-                raise ValueError("definition scene needs a definition of <=20 words")
+            if not self.term:
+                raise ValueError(
+                    f"scene {self.index} has visual='definition' but the 'term' field is missing/empty; "
+                    "it must be a short word or phrase of at most 4 words, e.g. 'Token'"
+                )
+            if count_words(self.term) > 4:
+                raise ValueError(f"scene {self.index}: 'term' must be <=4 words, got {self.term!r}")
+            if not self.definition:
+                raise ValueError(
+                    f"scene {self.index} has visual='definition' but the 'definition' field is missing/empty; "
+                    "it must be a one-line explanation of at most 20 words"
+                )
+            if count_words(self.definition) > 20:
+                raise ValueError(f"scene {self.index}: 'definition' must be <=20 words, got {self.definition!r}")
         elif v == VisualType.COMPARISON:
             if self.comparison is None:
-                raise ValueError("comparison scene needs a comparison block")
+                raise ValueError(
+                    f"scene {self.index} has visual='comparison' but the 'comparison' field is missing; "
+                    "it must be an object with 'headers' (2 strings) and 'rows' (2-4 pairs of strings)"
+                )
         elif v == VisualType.FLOW:
-            if not self.flow_steps or not (2 <= len(self.flow_steps) <= 5):
-                raise ValueError("flow scene needs 2-5 steps")
+            if self.flow_steps is None or len(self.flow_steps) == 0:
+                raise ValueError(
+                    f"scene {self.index} has visual='flow' but the 'flow_steps' field is missing/empty; "
+                    "it must be a list of 2-5 short steps, each at most 3 words"
+                )
+            if not (2 <= len(self.flow_steps) <= 5):
+                raise ValueError(f"scene {self.index}: 'flow_steps' must have 2-5 items, got {len(self.flow_steps)}")
             for s in self.flow_steps:
                 if count_words(s) > 3:
-                    raise ValueError(f"flow step too long (>3 words): {s!r}")
+                    raise ValueError(f"scene {self.index}: flow step too long (>3 words): {s!r}")
         elif v == VisualType.CODE:
             if not self.code:
-                raise ValueError("code scene needs code")
+                raise ValueError(
+                    f"scene {self.index} has visual='code' but the 'code' field is missing/empty; "
+                    "it must be a short code snippet of at most 12 lines, each at most 60 characters"
+                )
             lines = self.code.splitlines()
             if len(lines) > 12:
-                raise ValueError("code scene: max 12 lines")
+                raise ValueError(f"scene {self.index}: 'code' must have <=12 lines, got {len(lines)}")
             for ln in lines:
                 if len(ln) > 60:
-                    raise ValueError("code scene: max 60 chars per line")
+                    raise ValueError(f"scene {self.index}: 'code' line too long (>60 chars): {ln!r}")
         elif v == VisualType.BROLL:
-            if not self.broll_query or not (1 <= len(self.broll_query.split()) <= 3):
-                raise ValueError("broll scene needs a broll_query of 1-3 words")
+            if not self.broll_query:
+                raise ValueError(
+                    f"scene {self.index} has visual='broll' but the 'broll_query' field is missing/empty; "
+                    "it must be 1-3 words describing stock footage to search for, e.g. 'server room'"
+                )
+            if not (1 <= len(self.broll_query.split()) <= 3):
+                raise ValueError(f"scene {self.index}: 'broll_query' must be 1-3 words, got {self.broll_query!r}")
         return self
 
 

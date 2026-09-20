@@ -20,9 +20,18 @@ Rules:
 1. Every scene narration must be natural spoken language, no markdown, no emojis.
 2. Include one real-world analogy somewhere in the script.
 3. No statistics, dates, version numbers or "latest" claims unless present in source notes.
-4. on_screen_title max 6 words. bullets max 8 words each, 2-4 bullets.
-5. definition scenes: term <= 4 words, definition <= 20 words.
-6. broll scenes: broll_query is 1-3 words describing stock footage to search for.
-7. Give scene "index" starting at 0 and "role" one of hook/content/cta.
+4. on_screen_title max 6 words.
+5. Give scene "index" starting at 0 and "role" one of hook/content/cta.
 
-Return ONLY JSON matching the schema.
+Each scene's "visual" value determines which OTHER fields on that scene are REQUIRED.
+Every field below is mandatory for its visual type -- never leave it null or omit it:
+- visual="title": no extra fields required beyond on_screen_title.
+- visual="bullets": REQUIRED "bullets" = a list of 2-4 short strings, each <=8 words.
+- visual="definition": REQUIRED "term" = a short word/phrase of <=4 words (e.g. "Token"),
+  AND REQUIRED "definition" = a one-line explanation of <=20 words. Both fields must be
+  filled in -- a definition scene with a null term or definition is invalid.
+- visual="broll": REQUIRED "broll_query" = 1-3 words describing stock footage to search
+  for (e.g. "server room").
+
+Return ONLY JSON matching the schema. Double-check before answering: does every scene
+have the fields its visual type requires, filled in and non-null?
