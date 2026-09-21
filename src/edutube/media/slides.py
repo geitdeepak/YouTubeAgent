@@ -208,9 +208,14 @@ def _draw_title(draw, img, scene, fmt, theme, language, is_short) -> None:
     font, lines = fit_text(draw, scene.on_screen_title, _body_font_bold(theme), max_w, fmt.height * 0.3, start_size, 56)
     center_y = fmt.height * (0.4 if is_short else 0.5)
     _draw_centered_lines(draw, lines, font, fmt, center_y, hex_to_rgb(theme.text))
-    underline_y = center_y + len(lines) * font.size * 0.8
+    underline_y = title_underline_y(center_y, len(lines), font.size)
     ux = fmt.width * 0.3
     draw.line([(ux, underline_y), (fmt.width - ux, underline_y)], fill=hex_to_rgb(theme.accent), width=6)
+
+
+def title_underline_y(start_y: float, n_lines: int, font_size: float) -> float:
+    """Y just below the last title line (lines are drawn at a 1.25x pitch, see _draw_centered_lines)."""
+    return start_y + n_lines * font_size * 1.25 + 8
 
 
 def _body_font_bold(theme: SlideTheme) -> Path:

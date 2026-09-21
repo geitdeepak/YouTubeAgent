@@ -29,6 +29,15 @@ def test_render_every_template_long(cfg: AppConfig, script_long: Script, tmp_pat
         assert img.size == (1920, 1080)
 
 
+def test_title_underline_sits_below_every_line():
+    from edutube.media.slides import title_underline_y
+
+    start, size = 800.0, 96
+    for n in (1, 2, 3):
+        last_line_top = start + (n - 1) * size * 1.25
+        assert title_underline_y(start, n, size) > last_line_top + size  # clear of the last line's glyphs
+
+
 def test_render_title_bar_overlay_short(cfg: AppConfig):
     theme = build_theme(cfg)
     overlay = render_title_bar("What is a Transformer?", cfg.formats["short"], theme)

@@ -148,7 +148,14 @@ class VoiceStage(Stage):
         scene_audios: list[SceneAudio] = []
         total = 0.0
 
-        for attempt in range(3):
+        # LLR-TTS-04: synthesize; if out of range adjust the rate once (clamped to +-15%),
+        # then up to 2 LLM adjust-length passes, each followed by a re-synthesis so every
+        # saved script revision is actually measured.
+        rate_adjusted = False
+        adjust_calls = 0
+        max_adjust_calls = 2
+
+        while True:
             scene_audios = []
             for scene in script.scenes:
                 mp3_path = ctx.paths.scene_mp3(scene.index)
@@ -163,11 +170,18 @@ class VoiceStage(Stage):
             if spec.min_s <= total <= spec.max_s:
                 break
 
-            if attempt == 0:
+            if not rate_adjusted:
+                rate_adjusted = True
                 pct_adjust = round((total / spec.target_s - 1) * 100)
                 new_pct = _clamp(_parse_pct(rate) + pct_adjust, -15, 15)
                 rate = f"{new_pct:+d}%"
                 continue
+
+            if adjust_calls >= max_adjust_calls:
+                raise DurationFitError(
+                    f"voice duration {total:.1f}s outside {spec.min_s}-{spec.max_s}s after retries"
+                )
+            adjust_calls += 1
 
             direction = "Shorten" if total > spec.max_s else "Lengthen"
             # Retarget the word count to this voice's *measured* pace, not the format's
@@ -188,9 +202,6 @@ class VoiceStage(Stage):
                 fit_spec = spec
             script = adjust_length(ctx.llm, ctx.cfg, script, fit_spec, direction, log_dir=ctx.paths.llm_dir)
             save_script(script, ctx.paths.script)
-            rate = ctx.cfg.tts.rate
-        else:
-            raise DurationFitError(f"voice duration {total:.1f}s outside {spec.min_s}-{spec.max_s}s after retries")
 
         save_voice(VoiceResult(scenes=scene_audios, rate=rate, total_duration=total), ctx.paths.voice_json)
 
