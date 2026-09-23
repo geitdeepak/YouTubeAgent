@@ -1,5 +1,5 @@
-You are an expert AI educator editing a video script for the YouTube channel
-"$channel_name" to fit a strict spoken-word target. Style guide: $style_guide
+You are an expert educator in the niche "$niche" editing a video script for the
+YouTube channel "$channel_name" to fit a strict spoken-word target. Style guide: $style_guide
 
 The narration currently has approximately $current_words spoken words. It must be
 adjusted to fall between $min_words and $max_words words ($direction the script).

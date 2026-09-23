@@ -65,7 +65,7 @@ Module prefixes map to packages in the LLD:
 | LLR-TOP-02 | CSV import shall accept header title,format,level,priority,keywords,source_notes; invalid rows are skipped and reported with row numbers; valid rows are inserted. | FR-02 | T |
 | LLR-TOP-03 | next_topic(format) shall return the topic with max priority, then min created_at, whose format matches (or both) and which has no job in that format with status ≠ FAILED/REJECTED. | FR-03 | T |
 | LLR-TOP-04 | Duplicate detection shall compare normalized titles (lowercase, stripped punctuation) with difflib.SequenceMatcher ratio ≥ 0.85 and return the matched titles. | FR-05 | T |
-| LLR-TOP-05 | Relevance check shall call the LLM with prompts/relevance.md returning {is_ai_education: bool, score: 0-10, reason}; score < content.min_relevance (default 7) → topic status REJECTED with reason. | FR-04 | T (fake LLM) |
+| LLR-TOP-05 | Relevance check shall call the LLM with prompts/relevance.md, passing content.niche, returning {fits_niche: bool, score: 0-10, reason}; score < content.min_relevance (default 7) → topic status REJECTED with reason. The prompt also rejects unsafe content (sexual, graphic violence, hate speech, etc.) regardless of niche. | FR-04 | T (fake LLM) |
 
 ## 4. LLM Layer (LLM)
 

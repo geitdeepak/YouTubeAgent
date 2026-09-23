@@ -30,7 +30,7 @@ EduTube Agent **will**:
 - Produce two video formats:
   - **Short** — YouTube Shorts, vertical 9:16, 30–40 seconds.
   - **Long** — standard video, horizontal 16:9, 4–5 minutes.
-- Cover **AI education content only** (e.g., "What is a Transformer?", "RAG explained", "Overfitting vs Underfitting").
+- Cover a single configurable **niche** (`content.niche` in config.yaml; default AI education, e.g. "What is a Transformer?", "RAG explained", "Overfitting vs Underfitting"). The relevance check (FR-04) filters topics against whatever niche is configured, and independently rejects unsafe content (sexual, graphic violence, hate speech, etc.) regardless of niche.
 - Use only free / open-source components (local LLM via Ollama, edge-tts, Pexels free API, FFmpeg, Pillow, YouTube Data API free quota).
 - Run on a single developer machine (Windows 10/11, Ubuntu 22.04+/WSL2, or macOS 13+).
 - Be operated through a command-line interface (CLI) and optionally scheduled daily.
@@ -41,7 +41,10 @@ EduTube Agent **will not** (out of scope for v1.0):
 - Clone real people's voices or use avatars / deepfakes.
 - Manage comments, community posts, or analytics dashboards.
 - Operate multiple YouTube channels simultaneously.
-- Provide a web UI (CLI only; a UI may be added in a later version).
+
+Note: v1.0 shipped CLI-only; a local web UI (§3.13) was added afterward to
+cover topic submission, format selection, preview, approval and upload from
+a browser, still running entirely on the operator's own machine.
 
 ### 1.3 Definitions & Acronyms
 
@@ -140,7 +143,7 @@ Priority: **M** = Must, **S** = Should, **C** = Could.
 | FR-01 | The system shall store topics with fields: id, title, format (short/long/both), level (beginner/intermediate), priority (1–5), optional source_notes, optional keywords, status, created_at. | M |
 | FR-02 | The system shall let the user add a topic via CLI and bulk-import topics from data/topics.csv. | M |
 | FR-03 | The system shall select the next topic by highest priority, then oldest created_at, skipping topics already produced in the requested format. | M |
-| FR-04 | The system shall reject topics not related to AI education using an LLM relevance check (score < threshold → rejected with reason). | S |
+| FR-04 | The system shall reject topics not related to the configured niche (content.niche) using an LLM relevance check (score < threshold → rejected with reason), and shall independently reject unsafe content (sexual, graphic violence, hate speech, harassment, illegal activity) regardless of niche. | S |
 | FR-05 | The system shall detect near-duplicate topics (case-insensitive fuzzy match ≥ 85%) against produced topics and warn the user. | S |
 
 ### 3.2 Script Generation

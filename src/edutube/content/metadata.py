@@ -30,6 +30,7 @@ def generate_metadata(
         variables={
             "channel_name": cfg.project.channel_name,
             "style_guide": cfg.content.style_guide,
+            "niche": cfg.content.niche,
             "banned_title_words": ", ".join(cfg.content.banned_title_words),
             "topic": script.topic_title,
             "format": script.format.value,

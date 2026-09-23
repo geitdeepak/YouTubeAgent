@@ -51,6 +51,7 @@ def _base_variables(cfg: AppConfig, topic: Topic, fmt: VideoFormat, spec: Format
     return {
         "channel_name": cfg.project.channel_name,
         "style_guide": cfg.content.style_guide,
+        "niche": cfg.content.niche,
         "topic": topic.title,
         "level": topic.level.value,
         "format": fmt.value,
@@ -111,6 +112,7 @@ def adjust_length(
         variables={
             "channel_name": cfg.project.channel_name,
             "style_guide": cfg.content.style_guide,
+            "niche": cfg.content.niche,
             "current_words": str(script.word_count),
             "min_words": str(spec.min_words),
             "max_words": str(spec.max_words),
@@ -159,6 +161,7 @@ def rewrite_script(
         variables={
             "channel_name": cfg.project.channel_name,
             "style_guide": cfg.content.style_guide,
+            "niche": cfg.content.niche,
             "min_words": str(spec.min_words),
             "max_words": str(spec.max_words),
             "script_json": script.model_dump_json(indent=2),

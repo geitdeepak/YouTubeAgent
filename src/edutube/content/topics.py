@@ -9,7 +9,6 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError
 
-from edutube.config import AppConfig
 from edutube.db import Repository
 from edutube.llm.base import LLMProvider
 from edutube.logging_setup import get_logger
@@ -19,7 +18,7 @@ log = get_logger("content.topics")
 
 
 class RelevanceResult(BaseModel):
-    is_ai_education: bool
+    fits_niche: bool
     score: int = Field(ge=0, le=10)
     reason: str
 
@@ -43,6 +42,7 @@ def add_topic(
     keywords: list[str] | None = None,
     source_notes: str | None = None,
     llm: LLMProvider | None = None,
+    niche: str = "AI education",
     min_relevance: int = 7,
     skip_check: bool = False,
 ) -> Topic:
@@ -62,8 +62,8 @@ def add_topic(
         log.warning("Possible duplicate topic(s): %s", ", ".join(dupes))
 
     if llm is not None and not skip_check:
-        result = check_relevance(llm, topic, min_relevance=min_relevance)
-        if not result.is_ai_education or result.score < min_relevance:
+        result = check_relevance(llm, topic, niche=niche, min_relevance=min_relevance)
+        if not result.fits_niche or result.score < min_relevance:
             topic.status = TopicStatus.REJECTED
             topic.reject_reason = result.reason
 
@@ -72,12 +72,14 @@ def add_topic(
     return topic
 
 
-def check_relevance(llm: LLMProvider, topic: Topic, *, min_relevance: int = 7) -> RelevanceResult:
-    """LLR-TOP-05: LLM relevance check against the AI-education niche."""
+def check_relevance(
+    llm: LLMProvider, topic: Topic, *, niche: str = "AI education", min_relevance: int = 7
+) -> RelevanceResult:
+    """LLR-TOP-05: LLM relevance check against the configured niche (content.niche)."""
     return llm.generate_json(
         prompt_name="relevance.md",
         variables={
-            "niche": "AI education",
+            "niche": niche,
             "topic": topic.title,
             "keywords": ", ".join(topic.keywords) or "none",
             "source_notes": topic.source_notes or "none",
@@ -118,7 +120,3 @@ def import_csv(repo: Repository, path: Path) -> ImportReport:
             except (ValidationError, ValueError) as e:
                 report.skipped.append((row_num, str(e)))
     return report
-
-
-def apply_content_defaults(cfg: AppConfig) -> int:
-    return cfg.content.min_relevance

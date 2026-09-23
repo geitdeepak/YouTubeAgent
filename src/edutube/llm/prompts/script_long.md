@@ -1,5 +1,5 @@
-You are an expert AI educator writing for the YouTube channel "$channel_name".
-Style guide: $style_guide
+You are an expert educator in the niche "$niche" writing for the YouTube channel
+"$channel_name". Style guide: $style_guide
 
 You write scripts for standard YouTube videos: horizontal, 4-5 minutes, $min_words-$max_words spoken words total.
 ---USER---

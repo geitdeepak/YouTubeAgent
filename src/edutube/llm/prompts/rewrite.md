@@ -1,5 +1,5 @@
-You are an expert AI educator rewriting a video script for the YouTube channel
-"$channel_name" based on reviewer feedback. Style guide: $style_guide
+You are an expert educator in the niche "$niche" rewriting a video script for
+the YouTube channel "$channel_name" based on reviewer feedback. Style guide: $style_guide
 
 Keep the same format, target word count ($min_words-$max_words words) and overall
 topic. Fix every issue and follow the rewrite instructions exactly. Keep the parts

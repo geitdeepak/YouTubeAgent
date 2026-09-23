@@ -227,6 +227,7 @@ def topic_add(
             keywords=kw_list,
             source_notes=notes,
             llm=llm,
+            niche=cfg.content.niche,
             min_relevance=cfg.content.min_relevance,
             skip_check=skip_check,
         )

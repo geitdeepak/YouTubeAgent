@@ -26,10 +26,19 @@ def test_add_topic_relevance_rejects_low_score(repo: Repository):
     from edutube.content.topics import RelevanceResult
 
     fake = FakeLLMProvider()
-    fake.register("relevance.md", lambda: RelevanceResult(is_ai_education=False, score=1, reason="not AI related"))
+    fake.register("relevance.md", lambda: RelevanceResult(fits_niche=False, score=1, reason="not AI related"))
     topic = add_topic(repo, title="Best Pizza Recipes Ever", llm=fake, min_relevance=7)
     assert topic.status == TopicStatus.REJECTED
     assert topic.reject_reason == "not AI related"
+
+
+def test_add_topic_uses_configured_niche(repo: Repository):
+    from edutube.content.topics import RelevanceResult
+
+    fake = FakeLLMProvider()
+    fake.register("relevance.md", lambda: RelevanceResult(fits_niche=True, score=9, reason="on topic"))
+    add_topic(repo, title="Sourdough Starter Basics", llm=fake, niche="home baking", min_relevance=7)
+    assert fake.calls[0]["variables"]["niche"] == "home baking"
 
 
 def test_check_relevance_calls_llm(repo: Repository):
@@ -39,7 +48,7 @@ def test_check_relevance_calls_llm(repo: Repository):
     from edutube.models import Topic
 
     fake = FakeLLMProvider()
-    fake.register("relevance.md", lambda: RelevanceResult(is_ai_education=True, score=9, reason="core AI concept"))
+    fake.register("relevance.md", lambda: RelevanceResult(fits_niche=True, score=9, reason="core AI concept"))
     topic = Topic(title="What is a Neural Network?", created_at=datetime.now(UTC))
     result = check_relevance(fake, topic)
     assert result.score == 9

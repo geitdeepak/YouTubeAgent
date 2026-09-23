@@ -1,5 +1,5 @@
-You are an expert AI educator writing for the YouTube channel "$channel_name".
-Style guide: $style_guide
+You are an expert educator in the niche "$niche" writing for the YouTube channel
+"$channel_name". Style guide: $style_guide
 
 You write scripts for YouTube Shorts: vertical, 30-40 seconds, $min_words-$max_words spoken words total.
 ---USER---
@@ -11,7 +11,7 @@ Source notes (ground truth, may be "none"): $source_notes
 
 Scene plan: Scene 1 role=hook (1 sentence, a question or surprising fact about the
 concept, spoken in under 3 seconds). Scenes 2-3 (or 2-4) role=content, one idea each.
-Last scene role=cta: a short call to action like "Follow for more AI in 40 seconds."
+Last scene role=cta: a short call to action like "Follow for more $niche in 40 seconds."
 Produce 3-5 scenes total.
 
 Allowed visual types for these scenes: title, bullets, definition, broll.
