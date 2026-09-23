@@ -52,3 +52,6 @@ Reference requirement IDs in docstrings, tests and commit messages.
 6. Metadata + thumbnail + MetadataStage + approval gate + generate/resume/edit/preview/approve/reject.
 7. YouTube auth + quota + uploader + UploadStage + auth/upload/quota commands.
 8. daily + clean + scheduling scripts + README + full acceptance run (SRS §6).
+9. (post-v1.0) Configurable niche (content.niche threaded through every prompt,
+   not hardcoded to AI) + local web UI (src/edutube/web/, `edutube serve`,
+   optional [web] extra) reusing the same orchestrator/pipeline code as the CLI.

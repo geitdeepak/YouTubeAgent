@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}EduTube Agent{% endblock %}
+{% block content %}
+
+<section class="card new-video">
+  <h1>New video</h1>
+  <p class="hint">Niche: <strong>{{ niche }}</strong></p>
+  <form action="/topics" method="post" class="topic-form">
+    <label for="title">Topic</label>
+    <input id="title" name="title" type="text" placeholder="e.g. What is a Neural Network?" required autofocus>
+
+    <div class="row">
+      <div class="field">
+        <label for="format">Length</label>
+        <select id="format" name="format">
+          <option value="short">Short (30-40s, vertical)</option>
+          <option value="long">Long (4-5 min, horizontal)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="level">Level</label>
+        <select id="level" name="level">
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+        </select>
+      </div>
+      <div class="field priority">
+        <label for="priority">Priority</label>
+        <input id="priority" name="priority" type="number" min="1" max="5" value="3">
+      </div>
+    </div>
+
+    <button type="submit" class="btn primary">Generate</button>
+  </form>
+</section>
+
+<section class="card jobs">
+  <h2>Recent jobs</h2>
+  {% if not rows %}
+    <p class="empty">No jobs yet — generate your first video above.</p>
+  {% else %}
+    <table class="job-table">
+      <thead>
+        <tr><th>Topic</th><th>Format</th><th>Status</th><th>Created</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td class="topic-cell">{{ r.topic.title if r.topic else "?" }}</td>
+          <td><span class="pill fmt-{{ r.job.format.value }}">{{ r.job.format.value }}</span></td>
+          <td>
+            <span class="pill status-{{ r.job.status.value|lower }}">{{ r.job.status.value }}</span>
+            {% if r.running %}<span class="spinner" title="running"></span>{% endif %}
+          </td>
+          <td class="muted">{{ r.job.created_at.strftime("%b %d, %H:%M") }}</td>
+          <td><a class="btn small" href="/jobs/{{ r.job.id }}">Open</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</section>
+
+{% endblock %}

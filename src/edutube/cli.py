@@ -500,5 +500,28 @@ def version() -> None:
     console.print(f"edutube-agent {__version__}")
 
 
+@app.command()
+def serve(
+    host: str = typer.Option("127.0.0.1", "--host", help="Bind address; keep this local-only"),
+    port: int = typer.Option(8000, "--port"),
+) -> None:
+    """Launch the local browser UI: submit a topic, pick a format, preview, approve, upload."""
+    try:
+        import uvicorn
+    except ImportError as e:
+        raise EdutubeError(
+            "Web UI dependencies are not installed", hint='Run: pip install -e ".[web]"'
+        ) from e
+
+    cfg, secrets, repo = _load()
+    repo.close()  # the web app opens its own Repository per request/job
+
+    from edutube.web.app import create_app
+
+    web_app = create_app(cfg, secrets)
+    console.print(f"[bold green]EduTube web UI: http://{host}:{port}[/bold green]")
+    uvicorn.run(web_app, host=host, port=port, log_level="warning")
+
+
 if __name__ == "__main__":
     app()

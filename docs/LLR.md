@@ -243,6 +243,17 @@ Module prefixes map to packages in the LLD:
 | LLR-SCH-02 | scripts/schedule_cron.sh prints/installs a crontab line running edutube daily with cd into the project and venv activation, logging to logs/cron.log. | FR-103 | D |
 | LLR-SCH-03 | edutube clean --older-than 14 removes job subfolders audio/, slides/, clips/, llm/ for jobs older than N days, keeping final.mp4, script.json, metadata.json, thumbnail.jpg. | FR-104 | T |
 
+## 21. Web UI (WEB)
+
+| ID | Requirement | Trace | Verify |
+|---|---|---|---|
+| LLR-WEB-01 | edutube serve shall bind to --host (default 127.0.0.1) and --port (default 8000) and construct the FastAPI app from the same AppConfig/Secrets as the CLI. | FR-120, FR-123 | I |
+| LLR-WEB-02 | POST /topics shall validate a non-blank title and a format in {short, long}, insert a Topic (skip_check=True), create a Job via orchestrator.create_job, submit it to the background runner, and redirect to /jobs/<id>. | FR-120, FR-121 | T |
+| LLR-WEB-03 | Background job/resume/upload execution shall open its own Repository (own SQLite connection) per background thread; the request-handling path shall likewise open a fresh Repository per request via a FastAPI dependency. Connections shall never be shared across threads. | FR-122 | I |
+| LLR-WEB-04 | GET /api/jobs/<id>/status shall read current state from the database (status, failed_stage, last_error, needs_human_review, upload url) plus an in-memory "is this job's thread currently running" flag; the in-memory flag is a UI convenience only and never the source of truth for job status. | FR-122 | T |
+| LLR-WEB-05 | POST /jobs/<id>/approve shall only succeed when status=AWAITING_APPROVAL (else HTTP 409); POST .../upload only when status=APPROVED (else HTTP 409); both mirror the CLI's approve/upload preconditions. | FR-121 | T |
+| LLR-WEB-06 | GET /jobs/<id>/video shall stream workspace/jobs/<id>/final.mp4 with HTTP Range support (for in-browser scrubbing) and 404 when not yet rendered. | FR-120 | T |
+
 ## 21. Traceability Summary (SRS → LLR)
 
 | SRS | LLR |

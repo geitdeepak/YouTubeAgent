@@ -246,10 +246,19 @@ Priority: **M** = Must, **S** = Should, **C** = Could.
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-110 | The system shall provide a CLI edutube with commands: init, doctor, auth, topic add/import/list, generate, resume, status, edit-script, preview, approve, reject, upload, daily, quota, clean. | M |
+| FR-110 | The system shall provide a CLI edutube with commands: init, doctor, auth, topic add/import/list, generate, resume, status, edit-script, preview, approve, reject, upload, daily, quota, clean, serve. | M |
 | FR-111 | doctor shall verify Python version, FFmpeg/ffprobe, Ollama server & model, fonts, Pexels key, OAuth files, disk space, and print pass/fail per check. | M |
 | FR-112 | All behaviour shall be configurable via config.yaml with secrets in .env; config validated at startup with clear errors. | M |
 | FR-113 | The system shall log to console (rich) and to rotating file logs/edutube.log, with a per-job log workspace/jobs/<id>/job.log. | M |
+
+### 3.13 Local Web UI
+
+| ID | Requirement | Priority |
+|---|---|---|
+| FR-120 | `edutube serve` shall launch a local-only (default 127.0.0.1) web server providing: a form to submit a topic and pick Short/Long, a job list, and a per-job page with stage history, video preview, approve/reject, and upload. | S |
+| FR-121 | The web UI shall reuse the same orchestrator/pipeline code as the CLI; it shall not duplicate stage logic. | M |
+| FR-122 | Video generation and upload triggered from the web UI shall run in a background thread so HTTP requests return immediately; job status shall always be read from the database, never from in-memory state alone, so a server restart does not lose job history. | M |
+| FR-123 | The web UI is a local convenience layer, not a hosted service; it shall not be exposed as a requirement to bind beyond localhost, and shall not introduce authentication (out of scope for a single-operator local tool). | S |
 
 ## 4. Non-Functional Requirements
 

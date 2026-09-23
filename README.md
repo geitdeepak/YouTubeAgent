@@ -64,7 +64,26 @@ Videos uploaded from an unverified Google API project stay **private** until
 Google audits the project -- review and publish them manually in YouTube
 Studio, or apply for the audit.
 
-## Daily use
+## Web UI
+
+For a friendlier one-off workflow than the CLI, install the optional web
+extra and launch the local browser UI:
+
+```powershell
+pip install -e ".[web]"
+edutube serve
+```
+
+Open http://127.0.0.1:8000 -- type a topic, pick Short or Long, click
+Generate. The job runs in the background; the page refreshes itself while
+it's working. Once it reaches AWAITING_APPROVAL you can preview the video
+inline, approve or reject it, and upload to YouTube, all from the same page.
+
+This only ever binds to your own machine (`127.0.0.1`) -- it is not a hosted
+service, and there's no login since it's assumed to be for the one person
+running it locally.
+
+## Daily use (CLI)
 
 ```powershell
 # Add topics (or bulk-import from data/topics.csv)

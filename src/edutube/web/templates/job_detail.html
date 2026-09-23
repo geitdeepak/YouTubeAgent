@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ topic.title }} — EduTube Agent{% endblock %}
+{% block head %}
+{% if auto_refresh %}<meta http-equiv="refresh" content="4">{% endif %}
+{% endblock %}
+{% block content %}
+
+<a class="back" href="/">&larr; All jobs</a>
+
+<section class="card job-head">
+  <div class="job-head-top">
+    <h1>{{ topic.title }}</h1>
+    <span class="pill status-{{ job.status.value|lower }} big">{{ job.status.value }}</span>
+  </div>
+  <p class="muted mono">{{ job.id }} &middot; {{ job.format.value }} &middot; {{ job.language }}</p>
+  {% if job.needs_human_review %}
+    <p class="warn">⚠ Flagged for human review by the self-review stage — check the script carefully before approving.</p>
+  {% endif %}
+  {% if running %}
+    <p class="running-note"><span class="spinner"></span> Working in the background — this page refreshes automatically.</p>
+  {% endif %}
+</section>
+
+{% if job.status.value == "FAILED" %}
+<section class="card error-card">
+  <h2>Failed at stage: {{ job.failed_stage }}</h2>
+  <pre class="error-text">{{ job.last_error }}</pre>
+  <form action="/jobs/{{ job.id }}/resume" method="post" class="inline-form">
+    <label for="from_stage">Resume from</label>
+    <select id="from_stage" name="from_stage">
+      <option value="">wherever it left off</option>
+      <option value="script">script</option>
+      <option value="review">review</option>
+      <option value="voice">voice</option>
+      <option value="visuals">visuals</option>
+      <option value="render">render</option>
+      <option value="metadata">metadata</option>
+    </select>
+    <button type="submit" class="btn primary" {% if running %}disabled{% endif %}>Resume</button>
+  </form>
+</section>
+{% endif %}
+
+{% if has_video %}
+<section class="card">
+  <h2>Preview</h2>
+  <video controls preload="metadata" class="preview-video {{ 'portrait' if job.format.value == 'short' else 'landscape' }}"
+         {% if has_thumb %}poster="/jobs/{{ job.id }}/thumbnail"{% endif %}>
+    <source src="/jobs/{{ job.id }}/video" type="video/mp4">
+  </video>
+</section>
+{% endif %}
+
+{% if job.status.value == "AWAITING_APPROVAL" %}
+<section class="card action-card">
+  <h2>Review and decide</h2>
+  <div class="action-row">
+    <form action="/jobs/{{ job.id }}/approve" method="post">
+      <button type="submit" class="btn primary">Approve</button>
+    </form>
+    <form action="/jobs/{{ job.id }}/reject" method="post" class="inline-form">
+      <input type="text" name="reason" placeholder="Reason (optional)">
+      <button type="submit" class="btn danger">Reject</button>
+    </form>
+  </div>
+</section>
+{% endif %}
+
+{% if job.status.value == "APPROVED" %}
+<section class="card action-card">
+  <h2>Ready to upload</h2>
+  <form action="/jobs/{{ job.id }}/upload" method="post">
+    <button type="submit" class="btn primary" {% if running %}disabled{% endif %}>
+      {% if running %}Uploading…{% else %}Upload to YouTube{% endif %}
+    </button>
+  </form>
+</section>
+{% endif %}
+
+{% if upload %}
+<section class="card">
+  <h2>Uploaded</h2>
+  <p><a href="{{ upload.url }}" target="_blank" rel="noopener">{{ upload.url }}</a></p>
+  <p class="muted">Privacy: {{ upload.privacy }} &middot; uploaded {{ upload.uploaded_at }}</p>
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>Stage history</h2>
+  {% if not stage_runs %}
+    <p class="empty">No stages have run yet.</p>
+  {% else %}
+  <table class="stage-history">
+    <thead><tr><th>Stage</th><th>Status</th><th>Started</th><th>Duration</th></tr></thead>
+    <tbody>
+      {% for run in stage_runs %}
+      <tr>
+        <td>{{ run["stage"] }}</td>
+        <td><span class="pill status-{{ run["status"] }}">{{ run["status"] }}</span></td>
+        <td class="muted">{{ run["started_at"] }}</td>
+        <td class="muted">{% if run["duration_s"] %}{{ "%.1f"|format(run["duration_s"]) }}s{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+
+{% endblock %}
